@@ -66,6 +66,14 @@ export const MergeBox = props => {
 		setCommitMessage(`${_defaultMergeText}\n${_defaultMergeTextSuffix}`);
 	});
 
+	useDidMount(() => {
+		if (!derivedState.prRoot.project.removeSourceBranchAfterMerge) {
+			dispatch(setUserPreference(["pullRequestDeleteSourceBranch"], false));
+		} else {
+			dispatch(setUserPreference(["pullRequestDeleteSourceBranch"], true));
+		}
+	});
+
 	useEffect(() => {
 		if (includeMergeRequestDescription) {
 			setCommitMessage(
@@ -374,20 +382,18 @@ export const MergeBox = props => {
 				)}
 				{!headerLabel && (
 					<>
-						{derivedState.prRoot.project.removeSourceBranchAfterMerge && (
-							<div className="pad-left">
-								<Checkbox
-									checked={deleteBranch}
-									name="delete-branch"
-									noMargin
-									onChange={() => {
-										dispatch(setUserPreference(["pullRequestDeleteSourceBranch"], !deleteBranch));
-									}}
-								>
-									Delete source branch
-								</Checkbox>
-							</div>
-						)}
+						<div className="pad-left">
+							<Checkbox
+								checked={deleteBranch}
+								name="delete-branch"
+								noMargin
+								onChange={() => {
+									dispatch(setUserPreference(["pullRequestDeleteSourceBranch"], !deleteBranch));
+								}}
+							>
+								Delete source branch
+							</Checkbox>
+						</div>
 						<div className="pad-left">
 							<Checkbox
 								checked={squash}
