@@ -60,7 +60,9 @@ export const MergeBox = props => {
 
 	const _defaultMergeText = `Merge branch '${derivedState.pr.headRefName}' into '${derivedState.pr.baseRefName}'\n\n${derivedState.pr.title}`;
 	const _defaultMergeTextSuffix = `See merge request ${derivedState.pr.references.full}`;
-	const { deleteBranch, squash } = derivedState;
+	const [deleteBranch, setDeleteBranch] = useState(false);
+
+	const { squash } = derivedState;
 
 	useDidMount(() => {
 		setCommitMessage(`${_defaultMergeText}\n${_defaultMergeTextSuffix}`);
@@ -68,9 +70,9 @@ export const MergeBox = props => {
 
 	useDidMount(() => {
 		if (!derivedState.prRoot.project.removeSourceBranchAfterMerge) {
-			dispatch(setUserPreference(["pullRequestDeleteSourceBranch"], false));
+			setDeleteBranch(false);
 		} else {
-			dispatch(setUserPreference(["pullRequestDeleteSourceBranch"], true));
+			setDeleteBranch(true);
 		}
 	});
 
@@ -388,7 +390,7 @@ export const MergeBox = props => {
 								name="delete-branch"
 								noMargin
 								onChange={() => {
-									dispatch(setUserPreference(["pullRequestDeleteSourceBranch"], !deleteBranch));
+									setDeleteBranch(!deleteBranch);
 								}}
 							>
 								Delete source branch
