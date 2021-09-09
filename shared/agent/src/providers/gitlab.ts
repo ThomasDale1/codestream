@@ -906,8 +906,6 @@ export class GitLabProvider extends ThirdPartyIssueProviderBase<CSGitLabProvider
 					// Old format of queries
 					return `/merge_requests?${createQueryString(query)}&with_labels_details=true`;
 				}
-
-				
 			};
 			for (const query of queries) {
 				const splits = query.split(",");
@@ -1333,6 +1331,7 @@ export class GitLabProvider extends ThirdPartyIssueProviderBase<CSGitLabProvider
 				only_allow_merge_if_all_discussions_are_resolved: boolean;
 				only_allow_merge_if_pipeline_succeeds: boolean;
 				allow_merge_on_skipped_pipeline: boolean;
+				squash_option: string;
 			}>(`/projects/${encodeURIComponent(projectFullPath)}`);
 
 			response.project.mergeMethod = project.body.merge_method!;
@@ -1341,6 +1340,7 @@ export class GitLabProvider extends ThirdPartyIssueProviderBase<CSGitLabProvider
 				project.body.only_allow_merge_if_all_discussions_are_resolved;
 			response.project.onlyAllowMergeIfPipelineSucceeds =
 				project.body.only_allow_merge_if_pipeline_succeeds;
+			response.project.squashOption = project.body.squash_option;
 
 			const users = await this.getAssignableUsers({ boardId: encodeURIComponent(projectFullPath) });
 
@@ -1493,7 +1493,6 @@ export class GitLabProvider extends ThirdPartyIssueProviderBase<CSGitLabProvider
 				}
 			} as any;
 		}
-
 		return response;
 	}
 
